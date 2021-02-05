@@ -6,18 +6,19 @@ OBJs := $(patsubst %.c,%.o, $(CFILEs))
 
 ifeq ($(KERNELRELEASE),)
 
-ifeq ($(ARCH),arm)
-KERNELDIR ?= /home/yj/linux_kernel/linux-3.14
+#ifeq ($(ARCH),arm)
+KERNELDIR ?= /home/yj/linux_kernel/linux-4.14.87
 ROOTFS ?= /home/yj/source/rootfs 
-else
-KERNELDIR ?= /lib/modules/$(shell uname -r)/build
-endif
+#else
+#KERNELDIR ?= /lib/modules/$(shell uname -r)/build
+#endif
 PWD := $(shell pwd)
 
 
 
 modules:
 	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules 
+	echo $(KERNELDIR)
 
 modules_install:
 	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules INSTALL_MOD_PATH=$(ROOTFS) modules_install
@@ -30,6 +31,7 @@ clean:
 
 else
 obj-m += 01_xs3_led_dev.o
+#obj-m += 02_xs3_uart_dev.o
 
 
 

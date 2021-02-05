@@ -1,10 +1,9 @@
 #ifndef __XS3_LED_DEV_H
 #define __XS3_LED_DEV_H
 
-#define XS3_LED_MAGIC 'x'
+#define XS3_LED_MAGIC 'q'
 #define XS3_LED_ON  _IOW(XS3_LED_MAGIC, 1, unsigned long)
 #define XS3_LED_OFF _IOW(XS3_LED_MAGIC, 0, unsigned long)
-
 
 /* xs3led gpio
 led1 : gpio0_20

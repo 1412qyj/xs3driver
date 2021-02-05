@@ -17,7 +17,7 @@
 #include "./inc/xs3_led_dev.h"
 
 /*main dev number and second dev number*/
-int Xs3LedMajorNumber = 188;
+int Xs3LedMajorNumber = 190;
 int Xs3LedMinorNumber = 0;
 
 /*led dev structor*/
@@ -192,8 +192,6 @@ static int __init Xs3LedInitModule(void)
 	}
 	dev_num = MKDEV(Xs3LedMajorNumber, Xs3LedMinorNumber);
 
-
-
 	/*malloc a led dev msg*/
 	pGlobalXs3Led = (struct Xs3LedObject *)kmalloc(sizeof(struct Xs3LedObject), GFP_KERNEL);
 	if(NULL == pGlobalXs3Led)
@@ -228,7 +226,7 @@ static void __exit Xs3LedCleanUpModule(void)
 	unregister_chrdev_region(dev_num, 1);
 
 	cdev_del(&pGlobalXs3Led->cdev);
-
+#
 	//get back gpio to kernel
 	Xs3LedAddrUnremap(pGlobalXs3Led);
 
