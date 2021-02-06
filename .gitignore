@@ -6,6 +6,9 @@
 *.user
 *.sln.docstates
 
+# SourceInsightData
+Xs3LinuxDriver.si4project/
+
 # Build results
 
 [Dd]ebug/
