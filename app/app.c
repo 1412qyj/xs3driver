@@ -1,5 +1,5 @@
 #include "data_global.h"
-#include "pthread.h"
+#include "thread.h"
 
 extern int FdLed;
 extern int FdTim;
@@ -18,22 +18,19 @@ extern pthread_t PidUart;
 extern pthread_t PidLed;
 extern pthread_t PidTim;
 
+static void Init(void);
 
 int main(int argc, const char *argv[])
 {
-	int pidUartReval = 0;
-	int pidLedReval = 0;
-	int pidTimReval = 0;
-
 	Init();
 
 	pthread_create(&PidUart, NULL, PthreadUartCtl, NULL);
 	pthread_create(&PidLed, NULL, PthreadLedCtl, NULL);
 	pthread_create(&PidTim, NULL, PthreadTimCtl, NULL);
 
-	pthread_join(PidUart, &pidUartReval);
-	pthread_join(PidTim, &pidLedReval);
-	pthread_join(PidLed, &pidTimReval);
+	pthread_join(PidUart, NULL);
+	pthread_join(PidTim, NULL);
+	pthread_join(PidLed, NULL);
 	
 	return 0;
 }
@@ -42,10 +39,10 @@ static void Init(void)
 {
 	TimData = 1;
 
-	memset(GlobalRequestMsg, 0, sizeof(rtu_request_t));
-	memset(GlobalRespondMsg, 0, sizeof(rtu_respond_t));
+	memset(&GlobalRequestMsg, 0, sizeof(rtu_request_t));
+	memset(&GlobalRespondMsg, 0, sizeof(rtu_respond_t));
 
-	pthread_mutex_init(&MutexLed);
-	pthread_mutex_init(&MutexTim);
-	pthread_cond_init(&CondLed);
+	pthread_mutex_init(&MutexLed, NULL);
+	pthread_mutex_init(&MutexTim, NULL);
+	pthread_cond_init(&CondLed, NULL);
 }

@@ -5,6 +5,8 @@
 #include "modbus.h"
 #include "led.h"
 
+#include <pthread.h>
+
 void *PthreadLedCtl(void *arg);
 void *PthreadTimCtl(void *arg);
 void *PthreadUartCtl(void *arg);

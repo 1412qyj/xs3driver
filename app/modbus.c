@@ -130,34 +130,34 @@ static int ModbusErrorRespond(rtu_request_t *pRequestMsg, rtu_respond_t *pRespon
 static int ModbusCorrectRespond(rtu_request_t *pRequestMsg, rtu_respond_t *pRespondMsg)
 {
 	int ret = 0;
-	if(pRequestMsg.request.data[FUNCTION_INDEX] == x0a_read_tim)
+	if(pRequestMsg->request.data[FUNCTION_INDEX] == x0a_read_tim)
 	{
-		pRespondMsg.response.data[SLAVE_INDEX] = pRequestMsg.request.data[SLAVE_INDEX];
-		pRespondMsg.response.data[FUNCTION_INDEX] = pRequestMsg.request.data[FUNCTION_INDEX];
+		pRespondMsg->response.data[SLAVE_INDEX] = pRequestMsg->request.data[SLAVE_INDEX];
+		pRespondMsg->response.data[FUNCTION_INDEX] = pRequestMsg->request.data[FUNCTION_INDEX];
 
 		pthread_mutex_lock(&MutexTim);
-		pRespondMsg.response.data[TIMDATA_INDEX] = TimData;
+		pRespondMsg->response.data[TIMDATA_INDEX] = TimData;
 		pthread_mutex_unlock(&MutexTim);
 
-		ret = CalCrc(pRespondMsg.response.data, 3);
-		pRespondMsg.response.data[3] = (unsigned short)ret && 0xff00;
-		pRespondMsg.response.data[4] = (unsigned short)ret && 0x00ff;
+		ret = CalCrc(pRespondMsg->response.data, 3);
+		pRespondMsg->response.data[3] = (unsigned short)ret && 0xff00;
+		pRespondMsg->response.data[4] = (unsigned short)ret && 0x00ff;
 	}
 
-	if(pRequestMsg.request.data[FUNCTION_INDEX] == x0b_write_tim)
+	if(pRequestMsg->request.data[FUNCTION_INDEX] == x0b_write_tim)
 	{
-		pRespondMsg.response.data[SLAVE_INDEX] = pRequestMsg.request.data[SLAVE_INDEX];
-		pRespondMsg.response.data[FUNCTION_INDEX] = pRequestMsg.request.data[FUNCTION_INDEX];
+		pRespondMsg->response.data[SLAVE_INDEX] = pRequestMsg->request.data[SLAVE_INDEX];
+		pRespondMsg->response.data[FUNCTION_INDEX] = pRequestMsg->request.data[FUNCTION_INDEX];
 
 		
-		pRespondMsg.response.data[TIMDATA_INDEX] = pRequestMsg.request.data[TIMDATA_INDEX];
+		pRespondMsg->response.data[TIMDATA_INDEX] = pRequestMsg->request.data[TIMDATA_INDEX];
 		pthread_mutex_lock(&MutexTim);
-		TimData = pRespondMsg.response.data[TIMDATA_INDEX];
+		TimData = pRespondMsg->response.data[TIMDATA_INDEX];
 		pthread_mutex_unlock(&MutexTim);
 
-		ret = CalCrc(pRespondMsg.response.data, 3);
-		pRespondMsg.response.data[3] = (unsigned short)ret && 0xff00;
-		pRespondMsg.response.data[4] = (unsigned short)ret && 0x00ff;
+		ret = CalCrc(pRespondMsg->response.data, 3);
+		pRespondMsg->response.data[3] = (unsigned short)ret && 0xff00;
+		pRespondMsg->response.data[4] = (unsigned short)ret && 0x00ff;
 	}
 
 	return Error_NeedTranfer;

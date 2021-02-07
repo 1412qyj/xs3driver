@@ -9,7 +9,7 @@ int FdTim;
 int FdUart;
 
 pthread_mutex_t MutexTim;
-pthread_cond_t CondTim;
+pthread_cond_t CondLed;
 pthread_mutex_t MutexLed;
 
 rtu_request_t GlobalRequestMsg;

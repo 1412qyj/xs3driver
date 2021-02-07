@@ -27,7 +27,7 @@ app:
 	arm-linux-gcc ./Xs3_app.c -o app -Wall -I$(INC_DIR)
 
 clean:
-	rm -rf *.o *.ko .*.cmd *.mod.* modules.order Module.symvers .tmp.versions *.mod app 
+	rm -rf *.o *.ko .*.cmd *.mod.* modules.order Module.symvers .tmp.versions *.mod 
 
 else
 obj-m += 01_xs3_led_dev.o

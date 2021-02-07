@@ -1,9 +1,21 @@
 #ifndef __DATA_GLOBAL_H
 #define __DATA_GLOBAL_H
 
-#define XS3_DEV_LED_PATH
-#define XS3_DEV_TIM_PATH
-#define XS3_DEV_UART_PATH
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <pthread.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <fcntl.h>
+
+
+#define XS3_DEV_LED_PATH	 "/dev/uleds"
+#define XS3_DEV_TIM_PATH	 "/dev/xs3tim"
+#define XS3_DEV_UART_PATH 	 "/dev/xs3uart"
 
 #define LED_ON	1
 #define LED_OFF	0
@@ -11,7 +23,7 @@
 #define LED_2 2
 #define LED_3 3
 
-typedef int Tim_t;
+#define Tim_t int
 
 typedef enum
 {
