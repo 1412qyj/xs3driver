@@ -7,7 +7,7 @@ OBJs := $(patsubst %.c,%.o, $(CFILEs))
 ifeq ($(KERNELRELEASE),)
 
 #ifeq ($(ARCH),arm)
-KERNELDIR ?= /home/yj/linux_kernel/linux-4.14.87
+KERNELDIR ?= /home/yj/linux_kernel/pd-a8-plc-linux/
 ROOTFS ?= /home/yj/source/rootfs 
 #else
 #KERNELDIR ?= /lib/modules/$(shell uname -r)/build
@@ -18,13 +18,12 @@ PWD := $(shell pwd)
 
 modules:
 	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules 
-	echo $(KERNELDIR)
 
 modules_install:
 	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules INSTALL_MOD_PATH=$(ROOTFS) modules_install
 
-app:
-	arm-linux-gcc ./Xs3_app.c -o app -Wall -I$(INC_DIR)
+tranfer:
+	cp *.ko /home/yj/source/rootfs/qyj/
 
 clean:
 	rm -rf *.o *.ko .*.cmd *.mod.* modules.order Module.symvers .tmp.versions *.mod 
