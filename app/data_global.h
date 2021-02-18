@@ -13,7 +13,7 @@
 #include <fcntl.h>
 
 
-#define XS3_DEV_LED_PATH	 "/dev/uleds"
+#define XS3_DEV_LED_PATH	 "/dev/xs3led"
 #define XS3_DEV_TIM_PATH	 "/dev/xs3tim"
 #define XS3_DEV_UART_PATH 	 "/dev/xs3uart"
 

@@ -17,7 +17,7 @@ PWD := $(shell pwd)
 
 
 modules:
-	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules 
+	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules
 
 modules_install:
 	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules INSTALL_MOD_PATH=$(ROOTFS) modules_install
@@ -30,7 +30,8 @@ clean:
 
 else
 obj-m += 01_xs3_led_dev.o
-#obj-m += 02_xs3_uart_dev.o
+#obj-m += 03_xs3_uart_dev.o
+#obj-m += 02_xs3_tim_dev.o
 
 
 

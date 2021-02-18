@@ -20,14 +20,20 @@ int LedCtl(int fd, int opt, int ledNum)
 
 static int LedOn(int fd, int ledNum)
 {
-	ioctl(fd, XS3_LED_ON, ledNum);
-	printf("led %d on\n", ledNum);
+	if(ioctl(fd, XS3_LED_ON, ledNum) == 0)
+		printf("led %d on\n", ledNum);
+	else
+		printf("led %d no reaction\n", ledNum);
+
 	return 0;
 }
 
 static int LedOff(int fd, int ledNum)
 {
-	ioctl(fd, XS3_LED_OFF, ledNum);
-	printf("led %d off\n", ledNum);
+	if(ioctl(fd, XS3_LED_OFF, ledNum) == 0)
+		printf("led %d off\n", ledNum);
+	else
+		printf("led %d no reaction\n", ledNum);
+	
 	return 0;
 }

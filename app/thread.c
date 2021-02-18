@@ -34,6 +34,7 @@ void *PthreadLedCtl(void *arg)
 		pthread_mutex_unlock(&MutexLed);
 
 		LedCtl(FdLed, state, LED_1);
+
 		state = !state;
 	}
 }
@@ -58,15 +59,16 @@ void *PthreadTimCtl(void *arg)
 	while(1)
 	{
 		read(FdTim, &CurrentData, sizeof(int));
-
+		
 		pthread_mutex_lock(&MutexTim);
 		if((CurrentData - LastTimData) >= TimData)
 		{
 			pthread_mutex_unlock(&MutexTim);
 			pthread_cond_signal(&CondLed);
-
+	
 			LastTimData = CurrentData;
 		}
+		pthread_mutex_unlock(&MutexTim);
 	}
 	
 }

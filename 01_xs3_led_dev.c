@@ -73,13 +73,13 @@ void Xs3LedOn(struct Xs3LedObject *pXs3Led, unsigned long num)
 	switch(num)
 	{
 		case 1:
-		writel((readl(pXs3Led->pLED1_GPIODAT) | (0x1 << 20)),pXs3Led->pLED1_GPIODAT);	
+		writel((readl(pXs3Led->pLED1_GPIODAT) & ~(0x1 << 20)),pXs3Led->pLED1_GPIODAT);	
 		break;
 		case 2:
-		writel((readl(pXs3Led->pLED2_GPIODAT) | (0x1 << 9)),pXs3Led->pLED2_GPIODAT);
+		writel((readl(pXs3Led->pLED2_GPIODAT) & ~(0x1 << 9)),pXs3Led->pLED2_GPIODAT);
 		break;
 		case 3:
-		writel((readl(pXs3Led->pLED3_GPIODAT) | (0x1 << 8)),pXs3Led->pLED3_GPIODAT);
+		writel((readl(pXs3Led->pLED3_GPIODAT) & ~(0x1 << 8)),pXs3Led->pLED3_GPIODAT);
 		break;
 	}	
 }
@@ -89,13 +89,13 @@ void Xs3LedOff(struct Xs3LedObject *pXs3Led, unsigned long num)
 	switch(num)
 	{
 		case 1:
-		writel((readl(pXs3Led->pLED1_GPIODAT) & ~(0x1 << 20)),pXs3Led->pLED1_GPIODAT);	
+		writel((readl(pXs3Led->pLED1_GPIODAT) | (0x1 << 20)),pXs3Led->pLED1_GPIODAT);	
 		break;
 		case 2:
-		writel((readl(pXs3Led->pLED2_GPIODAT) & ~(0x1 << 9)),pXs3Led->pLED2_GPIODAT);
+		writel((readl(pXs3Led->pLED2_GPIODAT) | (0x1 << 9)),pXs3Led->pLED2_GPIODAT);
 		break;
 		case 3:
-		writel((readl(pXs3Led->pLED3_GPIODAT) & ~(0x1 << 8)),pXs3Led->pLED3_GPIODAT);
+		writel((readl(pXs3Led->pLED3_GPIODAT) | (0x1 << 8)),pXs3Led->pLED3_GPIODAT);
 		break;
 	}
 }
@@ -210,8 +210,10 @@ static int __init Xs3LedInitModule(void)
 
 	//always config this
 	pGlobalXs3Led->cdev.owner = THIS_MODULE;
+	pGlobalXs3Led->cdev.ops = &Xs3LedOpts;
 
-	cdev_add(&pGlobalXs3Led->cdev, dev_num, 1);
+	if(cdev_add(&pGlobalXs3Led->cdev, dev_num, 1))
+		printk("Error add xs3Led dev\n");
 
 	printk("XS3led module init successfully\n");
 
@@ -226,7 +228,7 @@ static void __exit Xs3LedCleanUpModule(void)
 	unregister_chrdev_region(dev_num, 1);
 
 	cdev_del(&pGlobalXs3Led->cdev);
-#
+
 	//get back gpio to kernel
 	Xs3LedAddrUnremap(pGlobalXs3Led);
 

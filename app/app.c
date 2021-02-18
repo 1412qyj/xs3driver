@@ -37,7 +37,7 @@ int main(int argc, const char *argv[])
 
 static void Init(void)
 {
-	TimData = 1;
+	TimData = 2;
 
 	memset(&GlobalRequestMsg, 0, sizeof(rtu_request_t));
 	memset(&GlobalRespondMsg, 0, sizeof(rtu_respond_t));
