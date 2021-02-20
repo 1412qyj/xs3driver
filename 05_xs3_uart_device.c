@@ -4,9 +4,9 @@
 #include <linux/platform_device.h>
 
 #define UART_BASE 0x44e09000
-#define UART_RX_PIN	UART_BASE
-#define UART_TX_PIN	UART_BASE
-
+#define UART1_RX_PIN	UART_BASE
+#define UART1_TX_PIN	UART_BASE
+#define UART1_IRQ_NUM   72
 
 struct resource Xs3UartRes[] = {
 	[0] = {

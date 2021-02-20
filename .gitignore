@@ -1,4 +1,3 @@
-Xs3LinuxDriver.si4project/
 *.o
 *.mod.c
 *.ko
@@ -6,3 +5,4 @@ Xs3LinuxDriver.si4project/
 *.symvers
 .tmp_versions/
 .*.cmd
+Xs3LinuxDriver.si4project/
