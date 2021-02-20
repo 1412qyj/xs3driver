@@ -18,28 +18,39 @@
 #include <asm/uaccess.h>	// for copy_to/from_user()
 #include <asm/io.h>		// for inb(), outb()
 
-#define UART_IRQ	4	// UART's Interrupt Request pin
-#define UART_BASE	0x44E09000	// UART's base I/O port-address
+
+#define UART_IRQ	72	// UART's Interrupt Request pin  *p545
+#define UART_BASE	UART_BASE_1	// UART's base I/O port-address *
 #define INTR_MASK	0x0F	// UART Interrupt Mask
+
+enum
+{
+	UART_BASE_0 = 0x44E09000,
+	UART_BASE_1 = 0x48022000,
+	UART_BASE_2 = 0x48024000,
+	UART_BASE_3 = 0x481A6000,
+	UART_BASE_4 = 0x481A8000,
+	UART_BASE_5 = 0x481AA000,
+};
 
 enum	
 {
-	UART_RX_DATA	= UART_BASE + 0,
-	UART_TX_DATA	= UART_BASE + 0,
-	UART_DLATCH_LO	= UART_BASE + 0,
-	UART_DLATCH_HI	= UART_BASE + 1,
-	UART_INTR_EN	= UART_BASE + 1,
-	UART_INTR_ID	= UART_BASE + 2,
-	UART_FIFO_CTRL	= UART_BASE + 2,
-	UART_LINE_CTRL	= UART_BASE + 3,
-	UART_MODEM_CTRL	= UART_BASE + 4,
-	UART_LINE_STAT	= UART_BASE + 5,
-	UART_MODEM_STAT = UART_BASE + 6,
-	UART_SCRATCH	= UART_BASE + 7,
+	UART_RX_DATA	= UART_BASE + 0x0,
+	UART_TX_DATA	= UART_BASE + 0x0,
+	UART_DLATCH_LO	= UART_BASE + 0x4,
+	UART_DLATCH_HI	= UART_BASE + 0x4,
+	UART_INTR_EN	= UART_BASE + 0x4,
+	UART_INTR_ID	= UART_BASE + 0x8,
+	UART_FIFO_CTRL	= UART_BASE + 0x8,
+	UART_LINE_CTRL	= UART_BASE + 0xc,
+	UART_MODEM_CTRL	= UART_BASE + 0x10,
+	UART_LINE_STAT	= UART_BASE + 0x14,
+	UART_MODEM_STAT = UART_BASE + 0x18,
+	UART_SCRATCH	= UART_BASE + 0x1C,
 };
 
-char modname[] = "uart";
-int  my_major = 200;
+char modname[] = "xs3 uart";
+int  my_major = 280;
 wait_queue_head_t  wq_recv;
 wait_queue_head_t  wq_xmit;
 
@@ -109,17 +120,20 @@ static int __init uart_init( void )
 	init_waitqueue_head( &wq_recv );
 
 	// configure the UART
-	outb( 0x00, UART_INTR_EN );
+	outb( 0x00, UART_INTR_EN ); //写入一个字节的数据
+	printk(" configure the uart pin UART_INTR_EN successfully\n");
 	outb( 0xC7, UART_FIFO_CTRL );
 	outb( 0x83, UART_LINE_CTRL );
 	outb( 0x01, UART_DLATCH_LO );
 	outb( 0x00, UART_DLATCH_HI );
 	outb( 0x03, UART_LINE_CTRL );
 	outb( 0x03, UART_MODEM_CTRL );
-	inb( UART_MODEM_STAT );
-	inb( UART_LINE_STAT );
-	inb( UART_RX_DATA );
-	inb( UART_INTR_ID );
+	//inb( UART_MODEM_STAT );
+	//inb( UART_LINE_STAT );
+	//inb( UART_RX_DATA );
+	//inb( UART_INTR_ID );
+
+	printk(" configure the uart pin successfully\n");
 		
 	if ( request_irq( UART_IRQ, my_isr, IRQF_SHARED, 
 				modname, &modname ) < 0 ) return -EBUSY;
@@ -158,7 +172,7 @@ ssize_t my_read( struct file *file, char *buf, size_t len, loff_t *pos )
 		if ( file->f_flags & O_NONBLOCK ) return 0;
 		if ( wait_event_interruptible( wq_recv, 
 				(inb( UART_LINE_STAT ) & 1) ) ) return -EINTR;
-		}kop
+		}
 	
 	count = 0;
 	for (i = 0; i < len; i++)

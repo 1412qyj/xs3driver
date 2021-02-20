@@ -20,6 +20,9 @@ struct secdev
 	atomic_t secnum;
 	
 	struct timer_list tm;
+
+	struct class *pclass;
+	struct device *pdevice;
 };
 
 struct secdev *pgsecdev = NULL;
@@ -149,6 +152,12 @@ static int __init secdev_init(void)
 	pgsecdev->cdev.owner = THIS_MODULE;
 
 	cdev_add(&pgsecdev->cdev,devno,1);
+
+
+	//auto mknod
+	pgsecdev->pclass = class_create(THIS_MODULE, "xs3timers");
+	pgsecdev->pdevice = device_create(pgsecdev->pclass, NULL, devno, NULL, "xs3tim");
+
 	printk("init\n");
 
     return 0;
@@ -161,6 +170,8 @@ static void __exit secdev_cleanup(void)
 
 	cdev_del(&pgsecdev->cdev);
 
+	device_destroy(pgsecdev->pclass,devno);
+	class_destroy(pgsecdev->pclass);
 
 	kfree(pgsecdev);
 	pgsecdev = NULL;

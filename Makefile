@@ -30,8 +30,9 @@ clean:
 
 else
 obj-m += 01_xs3_led_dev.o
-#obj-m += 03_xs3_uart_dev.o
-#obj-m += 02_xs3_tim_dev.o
+obj-m += 03_xs3_uart_dev.o
+obj-m += 04_xs3_uart_dev.o
+obj-m += 02_xs3_tim_dev.o
 
 
 

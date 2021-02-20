@@ -13,6 +13,7 @@
 #include <linux/slab.h>
 #include <linux/of.h>
 #include <linux/of_gpio.h>
+#include <linux/device.h>
 
 #include "./inc/xs3_led_dev.h"
 
@@ -31,6 +32,9 @@ struct Xs3LedObject{
 	volatile unsigned long *pLED1_GPIOCON;
 	volatile unsigned long *pLED2_GPIOCON;
 	volatile unsigned long *pLED3_GPIOCON;
+
+	struct class *pclass;
+	struct device *pdevice;
 };
 
 /*definity a led example*/
@@ -215,6 +219,9 @@ static int __init Xs3LedInitModule(void)
 	if(cdev_add(&pGlobalXs3Led->cdev, dev_num, 1))
 		printk("Error add xs3Led dev\n");
 
+	pGlobalXs3Led->pclass = class_create(THIS_MODULE,"xs3leds");
+	pGlobalXs3Led->pdevice = device_create(pGlobalXs3Led->pclass,NULL,dev_num,NULL,"xs3led");
+
 	printk("XS3led module init successfully\n");
 
 	return 0;
@@ -231,6 +238,9 @@ static void __exit Xs3LedCleanUpModule(void)
 
 	//get back gpio to kernel
 	Xs3LedAddrUnremap(pGlobalXs3Led);
+
+	device_destroy(pGlobalXs3Led->pclass,dev_num);
+	class_destroy(pGlobalXs3Led->pclass);
 
 	kfree(pGlobalXs3Led);
 	pGlobalXs3Led = NULL;

@@ -75,8 +75,11 @@ void *PthreadTimCtl(void *arg)
 
 void *PthreadUartCtl(void *arg)
 {
+	printf("uart dev name is %s\n", XS3_DEV_UART_PATH);
 	int count = 0;
 	int ret = 0;
+	int i = 0;
+	char recvBuf[20] = {'\0'};
 	FdUart = open(XS3_DEV_UART_PATH, O_RDWR);
 	if(FdUart < 0)
 	{
@@ -88,16 +91,54 @@ void *PthreadUartCtl(void *arg)
 
 	while(1)
 	{
+		count = read(FdUart, &recvBuf, sizeof(recvBuf));
+		
+		if(count > 0)
+		{
+			printf("count = %d\n", count);
+			if(!strncmp(recvBuf, "1", count))
+				printf("ÊÕµ½ 1\n");
+		}
+	}
+
+#if 0	
+	while(1)
+	{
 		memset(&GlobalRequestMsg, 0, sizeof(rtu_request_t));
 		memset(&GlobalRespondMsg, 0, sizeof(rtu_respond_t));
 
 		count = read(FdUart, &GlobalRequestMsg, sizeof(rtu_request_t));
 
-		ret = ModbusDataCheck(&GlobalRequestMsg, count);
-		
-		ret = ModbusRespondHandle(&GlobalRequestMsg, &GlobalRespondMsg, ret);
+		if(count > 0)
+		{
 
-		if(ret == Error_NeedTranfer)
-			write(FdUart, &GlobalRespondMsg, 5);
+		
+
+			for(i = 0; i < count; i++)
+			{
+				//printf("recv > %#x ", GlobalRequestMsg.request.data[i]);
+				printf("recv>%s\n", GlobalRequestMsg.request.data);
+			}
+			//printf("\n");
+
+			ret = ModbusDataCheck(&GlobalRequestMsg, count);
+		
+			ret = ModbusRespondHandle(&GlobalRequestMsg, &GlobalRespondMsg, ret);
+
+			if(ret == Error_NeedTranfer)
+			{
+				write(FdUart, &GlobalRespondMsg, 5);
+			
+				for(i = 0; i < 5; i++)
+					printf("send > %#x ", GlobalRequestMsg.request.data[i]);
+			
+				printf("\n");
+			}
+
+
+		}
+
+		
 	}
+	#endif
 }
