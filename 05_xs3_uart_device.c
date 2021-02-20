@@ -14,6 +14,7 @@ struct resource Xs3UartRes[] = {
 		.end = UART_RX_PIN + 7,
 		.flag = 
 	},
+	[1] = 
 };
 
 
